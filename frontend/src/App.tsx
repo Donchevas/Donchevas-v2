@@ -31,48 +31,45 @@ function App() {
       const data = await response.json();
       setMessages(prev => [...prev, { text: data.respuesta, sender: 'bot' }]);
     } catch (error) {
-      setMessages(prev => [...prev, { text: "⚠️ Error de conexión.", sender: 'bot' }]);
+      setMessages(prev => [...prev, { text: "⚠️ Error: No pude conectar con el Orquestador.", sender: 'bot' }]);
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="chat-app" style={{ maxWidth: '800px', margin: 'auto', fontFamily: 'sans-serif' }}>
-      <header style={{ background: '#2563eb', color: 'white', padding: '15px', textAlign: 'center' }}>
-        <h1>🤖 Donchevas-v2</h1>
-        <p>Orquestador: Familia | CV | Cursos</p>
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', maxWidth: '900px', margin: '0 auto', fontFamily: 'Segoe UI, Tahoma, Geneva, Verdana, sans-serif', background: '#f0f2f5' }}>
+      <header style={{ background: '#2563eb', color: 'white', padding: '20px', textAlign: 'center', borderBottom: '4px solid #1d4ed8' }}>
+        <h1 style={{ margin: 0 }}>🤖 Donchevas-v2</h1>
+        <p style={{ margin: '5px 0 0' }}>Agente Multi-Dominio | Persistencia de Contexto</p>
       </header>
-      
-      <main style={{ height: '70vh', overflowY: 'auto', padding: '20px', background: '#f3f4f6' }}>
+
+      <main style={{ flex: 1, overflowY: 'auto', padding: '20px', display: 'flex', flexDirection: 'column', gap: '15px' }}>
         {messages.map((m, i) => (
-          <div key={i} style={{ 
-            marginBottom: '15px', 
-            padding: '10px 15px', 
-            borderRadius: '10px',
-            background: m.sender === 'user' ? '#dbeafe' : 'white',
-            alignSelf: m.sender === 'user' ? 'flex-end' : 'flex-start'
-          }}>
-            {/* Renderizado de Markdown para un formato profesional */}
-            <ReactMarkdown remarkPlugins={[remarkGfm]}>{m.text}</ReactMarkdown>
+          <div key={i} style={{ alignSelf: m.sender === 'user' ? 'flex-end' : 'flex-start', maxWidth: '80%', padding: '15px', borderRadius: '15px', background: m.sender === 'user' ? '#007bff' : 'white', color: m.sender === 'user' ? 'white' : '#333', boxShadow: '0 2px 5px rgba(0,0,0,0.1)' }}>
+            {/* Renderizado Profesional de Markdown */}
+            <div style={{ lineHeight: '1.6' }}>
+              <ReactMarkdown remarkPlugins={[remarkGfm]}>{m.text}</ReactMarkdown>
+            </div>
           </div>
         ))}
-        {isLoading && <p><i>Donchevas está analizando el contexto...</i></p>}
+        {isLoading && <div style={{ alignSelf: 'flex-start', color: '#666', fontStyle: 'italic' }}>Analizando corpus y contexto...</div>}
         <div ref={scrollRef} />
       </main>
 
-      <footer style={{ display: 'flex', padding: '20px', background: 'white' }}>
+      <footer style={{ padding: '20px', background: 'white', display: 'flex', gap: '10px', borderTop: '1px solid #ddd' }}>
         <input 
-          style={{ flex: 1, padding: '10px', borderRadius: '5px', border: '1px solid #ccc' }}
+          style={{ flex: 1, padding: '12px', borderRadius: '25px', border: '1px solid #ccc', outline: 'none' }}
           value={input} 
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-          placeholder="Escribe tu consulta..."
+          placeholder="Consulta inversiones, familia o cursos de IA..."
+          disabled={isLoading}
         />
         <button 
-          style={{ marginLeft: '10px', padding: '10px 20px', background: '#2563eb', color: 'white', border: 'none', borderRadius: '5px' }}
           onClick={handleSend} 
-          disabled={isLoading}
+          disabled={isLoading || !input.trim()}
+          style={{ padding: '10px 20px', background: '#2563eb', color: 'white', border: 'none', borderRadius: '25px', cursor: 'pointer', fontWeight: 'bold' }}
         >
           Enviar
         </button>
