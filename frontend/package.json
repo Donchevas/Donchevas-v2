@@ -1,6 +1,5 @@
 "scripts": {
   "dev": "vite",
-  "build": "npm run build-vite",
-  "build-vite": "vite build",
+  "build": "npx vite build",
   "preview": "vite preview"
 }
