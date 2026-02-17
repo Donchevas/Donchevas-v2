@@ -31,45 +31,52 @@ function App() {
       const data = await response.json();
       setMessages(prev => [...prev, { text: data.respuesta, sender: 'bot' }]);
     } catch (error) {
-      setMessages(prev => [...prev, { text: "⚠️ Error: No pude conectar con el Orquestador.", sender: 'bot' }]);
+      setMessages(prev => [...prev, { text: "⚠️ Error de conexión con el Orquestador.", sender: 'bot' }]);
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', maxWidth: '900px', margin: '0 auto', fontFamily: 'Segoe UI, Tahoma, Geneva, Verdana, sans-serif', background: '#f0f2f5' }}>
-      <header style={{ background: '#2563eb', color: 'white', padding: '20px', textAlign: 'center', borderBottom: '4px solid #1d4ed8' }}>
-        <h1 style={{ margin: 0 }}>🤖 Donchevas-v2</h1>
-        <p style={{ margin: '5px 0 0' }}>Agente Multi-Dominio | Persistencia de Contexto</p>
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', maxWidth: '900px', margin: '0 auto', background: '#f8fafc', fontFamily: 'Inter, system-ui, sans-serif' }}>
+      <header style={{ background: '#1e40af', color: 'white', padding: '1.5rem', textAlign: 'center', borderBottom: '4px solid #1e3a8a' }}>
+        <h1 style={{ margin: 0, fontSize: '1.5rem' }}>🤖 Donchevas-v2</h1>
+        <p style={{ margin: '5px 0 0', fontSize: '0.9rem', opacity: 0.9 }}>Manager de IA: Familia | CV | Formación</p>
       </header>
 
-      <main style={{ flex: 1, overflowY: 'auto', padding: '20px', display: 'flex', flexDirection: 'column', gap: '15px' }}>
+      <main style={{ flex: 1, overflowY: 'auto', padding: '20px', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
         {messages.map((m, i) => (
-          <div key={i} style={{ alignSelf: m.sender === 'user' ? 'flex-end' : 'flex-start', maxWidth: '80%', padding: '15px', borderRadius: '15px', background: m.sender === 'user' ? '#007bff' : 'white', color: m.sender === 'user' ? 'white' : '#333', boxShadow: '0 2px 5px rgba(0,0,0,0.1)' }}>
-            {/* Renderizado Profesional de Markdown */}
-            <div style={{ lineHeight: '1.6' }}>
-              <ReactMarkdown remarkPlugins={[remarkGfm]}>{m.text}</ReactMarkdown>
-            </div>
+          <div key={i} style={{ 
+            alignSelf: m.sender === 'user' ? 'flex-end' : 'flex-start',
+            maxWidth: '85%',
+            padding: '1rem',
+            borderRadius: '12px',
+            background: m.sender === 'user' ? '#2563eb' : 'white',
+            color: m.sender === 'user' ? 'white' : '#1e293b',
+            boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+            lineHeight: '1.6'
+          }}>
+            {/* ReactMarkdown con remarkGfm para tablas y listas profesionales */}
+            <ReactMarkdown remarkPlugins={[remarkGfm]}>{m.text}</ReactMarkdown>
           </div>
         ))}
-        {isLoading && <div style={{ alignSelf: 'flex-start', color: '#666', fontStyle: 'italic' }}>Analizando corpus y contexto...</div>}
+        {isLoading && <div style={{ alignSelf: 'flex-start', color: '#64748b', fontStyle: 'italic' }}>Donchevas está analizando el contexto...</div>}
         <div ref={scrollRef} />
       </main>
 
-      <footer style={{ padding: '20px', background: 'white', display: 'flex', gap: '10px', borderTop: '1px solid #ddd' }}>
+      <footer style={{ padding: '1.5rem', background: 'white', borderTop: '1px solid #e2e8f0', display: 'flex', gap: '0.75rem' }}>
         <input 
-          style={{ flex: 1, padding: '12px', borderRadius: '25px', border: '1px solid #ccc', outline: 'none' }}
+          style={{ flex: 1, padding: '0.75rem 1rem', borderRadius: '9999px', border: '1px solid #cbd5e1', outline: 'none' }}
           value={input} 
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-          placeholder="Consulta inversiones, familia o cursos de IA..."
+          placeholder="Consulta sobre presupuestos, familia o cursos..."
           disabled={isLoading}
         />
         <button 
           onClick={handleSend} 
           disabled={isLoading || !input.trim()}
-          style={{ padding: '10px 20px', background: '#2563eb', color: 'white', border: 'none', borderRadius: '25px', cursor: 'pointer', fontWeight: 'bold' }}
+          style={{ padding: '0.75rem 1.5rem', background: '#2563eb', color: 'white', border: 'none', borderRadius: '9999px', cursor: 'pointer', fontWeight: '600' }}
         >
           Enviar
         </button>
