@@ -1,0 +1,7 @@
+fastapi
+uvicorn
+langchain
+langchain-google-vertexai
+langgraph
+google-cloud-aiplatform
+python-dotenv
