@@ -1,12 +1,11 @@
 {
   "name": "donchevas-v2-frontend",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "npx vite build",
-    "preview": "vite preview"
+    "build": "vite build",
+    "install-clean": "npm install && vite build"
   },
   "dependencies": {
     "react": "^18.2.0",
@@ -15,10 +14,7 @@
     "remark-gfm": "^4.0.0"
   },
   "devDependencies": {
-    "@types/react": "^18.2.0",
-    "@types/react-dom": "^18.2.0",
     "@vitejs/plugin-react": "^4.0.0",
-    "typescript": "^5.0.2",
     "vite": "^4.4.5"
   }
 }

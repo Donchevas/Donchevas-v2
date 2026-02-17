@@ -18,7 +18,6 @@ function App() {
     if (!input.trim()) return;
     const userMsg = { text: input, sender: 'user' as const };
     setMessages(prev => [...prev, userMsg]);
-    const currentInput = input;
     setInput('');
     setIsLoading(true);
 
@@ -26,53 +25,44 @@ function App() {
       const response = await fetch(API_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ prompt: currentInput }),
+        body: JSON.stringify({ prompt: input }),
       });
       const data = await response.json();
       setMessages(prev => [...prev, { text: data.respuesta, sender: 'bot' }]);
     } catch (error) {
-      setMessages(prev => [...prev, { text: "⚠️ Error de conexión con el Orquestador.", sender: 'bot' }]);
+      setMessages(prev => [...prev, { text: "⚠️ Error de conexión con el backend.", sender: 'bot' }]);
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', maxWidth: '900px', margin: '0 auto', background: '#f8fafc', fontFamily: 'system-ui, sans-serif' }}>
-      <header style={{ background: '#1e40af', color: 'white', padding: '1.5rem', textAlign: 'center', borderBottom: '4px solid #1e3a8a' }}>
-        <h1 style={{ margin: 0, fontSize: '1.5rem' }}>🤖 Donchevas-v2</h1>
-        <p style={{ margin: '5px 0 0', opacity: 0.9 }}>Manager Ejecutivo: Familia | CV | Formación</p>
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', maxWidth: '900px', margin: '0 auto', background: '#f8fafc', fontFamily: 'sans-serif' }}>
+      <header style={{ background: '#1e40af', color: 'white', padding: '1.5rem', textAlign: 'center' }}>
+        <h1 style={{ margin: 0 }}>🤖 Donchevas-v2</h1>
+        <p style={{ margin: 0 }}>Manager Ejecutivo | Orquestador de IA</p>
       </header>
-
-      <main style={{ flex: 1, overflowY: 'auto', padding: '20px', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+      <main style={{ flex: 1, overflowY: 'auto', padding: '20px', display: 'flex', flexDirection: 'column', gap: '15px' }}>
         {messages.map((m, i) => (
           <div key={i} style={{ 
             alignSelf: m.sender === 'user' ? 'flex-end' : 'flex-start',
             maxWidth: '85%',
-            padding: '1rem',
-            borderRadius: '12px',
+            padding: '12px 18px',
+            borderRadius: '15px',
             background: m.sender === 'user' ? '#2563eb' : 'white',
             color: m.sender === 'user' ? 'white' : '#1e293b',
-            boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
-            lineHeight: '1.6'
+            boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
           }}>
+            {/* Renderizado profesional para que no se vea todo junto */}
             <ReactMarkdown remarkPlugins={[remarkGfm]}>{m.text}</ReactMarkdown>
           </div>
         ))}
-        {isLoading && <div style={{ alignSelf: 'flex-start', color: '#64748b', fontStyle: 'italic' }}>Analizando contexto...</div>}
+        {isLoading && <div style={{ color: '#64748b' }}>Donchevas está pensando...</div>}
         <div ref={scrollRef} />
       </main>
-
-      <footer style={{ padding: '1.5rem', background: 'white', borderTop: '1px solid #e2e8f0', display: 'flex', gap: '0.75rem' }}>
-        <input 
-          style={{ flex: 1, padding: '0.75rem 1rem', borderRadius: '9999px', border: '1px solid #cbd5e1', outline: 'none' }}
-          value={input} 
-          onChange={(e) => setInput(e.target.value)}
-          onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-          placeholder="Escribe aquí..."
-          disabled={isLoading}
-        />
-        <button onClick={handleSend} disabled={isLoading} style={{ padding: '0.75rem 1.5rem', background: '#2563eb', color: 'white', border: 'none', borderRadius: '9999px', cursor: 'pointer' }}>Enviar</button>
+      <footer style={{ padding: '20px', background: 'white', display: 'flex', gap: '10px' }}>
+        <input style={{ flex: 1, padding: '12px', borderRadius: '8px', border: '1px solid #cbd5e1' }} value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && handleSend()} placeholder="Haz tu pregunta..." />
+        <button onClick={handleSend} disabled={isLoading} style={{ padding: '10px 20px', background: '#2563eb', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer' }}>Enviar</button>
       </footer>
     </div>
   );
