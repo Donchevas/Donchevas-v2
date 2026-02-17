@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
+import ReactMarkdown from 'react-markdown'; // Nueva librería
 
-// URL de tu backend exitoso en Cloud Run
 const API_URL = "https://donchevas-v2-1069673789450.europe-west1.run.app/chat";
 
 function App() {
@@ -30,7 +30,7 @@ function App() {
       const data = await response.json();
       setMessages(prev => [...prev, { text: data.respuesta, sender: 'bot' }]);
     } catch (error) {
-      setMessages(prev => [...prev, { text: "Error de conexión.", sender: 'bot' }]);
+      setMessages(prev => [...prev, { text: "⚠️ Error de conexión con el Orquestador.", sender: 'bot' }]);
     } finally {
       setIsLoading(false);
     }
@@ -38,31 +38,40 @@ function App() {
 
   return (
     <>
-      {/* SECCIÓN DE ESTILOS INYECTADOS (Lo que antes iba en App.css) */}
       <style>{`
-        .chat-app { display: flex; flex-direction: column; height: 100vh; max-width: 800px; margin: 0 auto; background: #f3f4f6; font-family: sans-serif; }
-        .chat-header { background: #2563eb; color: white; padding: 1rem; text-align: center; }
-        .chat-window { flex: 1; overflow-y: auto; padding: 1rem; display: flex; flex-direction: column; gap: 10px; }
-        .chat-bubble { max-width: 80%; padding: 10px 15px; border-radius: 15px; font-size: 14px; }
-        .chat-bubble.user { align-self: flex-end; background: #dbeafe; color: #1f2937; }
-        .chat-bubble.bot { align-self: flex-start; background: white; color: #1f2937; box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
-        .chat-input-container { display: flex; padding: 1rem; background: white; gap: 10px; border-top: 1px solid #ddd; }
-        .chat-input-container input { flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 5px; }
-        .chat-input-container button { background: #2563eb; color: white; border: none; padding: 0 20px; border-radius: 5px; cursor: pointer; }
-        .chat-input-container button:disabled { background: #93c5fd; }
+        .chat-app { display: flex; flex-direction: column; height: 100vh; max-width: 900px; margin: 0 auto; background: #f0f2f5; font-family: 'Segoe UI', Roboto, sans-serif; }
+        .chat-header { background: #2563eb; color: white; padding: 1.5rem; text-align: center; border-bottom: 4px solid #1d4ed8; }
+        .chat-window { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 15px; }
+        
+        /* Burbujas mejoradas */
+        .chat-bubble { max-width: 85%; padding: 12px 18px; border-radius: 18px; font-size: 15px; line-height: 1.6; }
+        .chat-bubble.user { align-self: flex-end; background: #007bff; color: white; border-bottom-right-radius: 4px; box-shadow: 0 2px 5px rgba(0,123,255,0.3); }
+        .chat-bubble.bot { align-self: flex-start; background: white; color: #333; border-bottom-left-radius: 4px; border: 1px solid #e1e4e8; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        
+        /* Estilos para el texto de IA (Markdown) */
+        .chat-bubble.bot p { margin-bottom: 10px; }
+        .chat-bubble.bot strong { color: #2563eb; }
+        .chat-bubble.bot ul { padding-left: 20px; margin-bottom: 10px; }
+        
+        .chat-input-container { display: flex; padding: 20px; background: white; gap: 12px; border-top: 1px solid #dcdfe6; }
+        .chat-input-container input { flex: 1; padding: 12px 18px; border: 2px solid #e1e4e8; border-radius: 30px; outline: none; transition: border-color 0.2s; }
+        .chat-input-container input:focus { border-color: #2563eb; }
+        .chat-input-container button { background: #2563eb; color: white; border: none; padding: 0 25px; border-radius: 30px; cursor: pointer; font-weight: 600; }
+        .chat-input-container button:disabled { background: #a5b4fc; cursor: not-allowed; }
       `}</style>
 
-      {/* ESTRUCTURA DEL CHAT */}
       <div className="chat-app">
         <header className="chat-header">
           <h1>🤖 Donchevas-v2</h1>
-          <p>Orquestador: Familia | CV | Cursos</p>
+          <p>Orquestador Multi-Dominio: Familia | CV | Cursos</p>
         </header>
         <main className="chat-window">
           {messages.map((m, i) => (
-            <div key={i} className={`chat-bubble ${m.sender}`}>{m.text}</div>
+            <div key={i} className={`chat-bubble ${m.sender}`}>
+              <ReactMarkdown>{m.text}</ReactMarkdown>
+            </div>
           ))}
-          {isLoading && <div className="chat-bubble bot">Pensando...</div>}
+          {isLoading && <div className="chat-bubble bot"><i>Donchevas está analizando tu consulta...</i></div>}
           <div ref={scrollRef} />
         </main>
         <footer className="chat-input-container">
@@ -70,9 +79,10 @@ function App() {
             value={input} 
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-            placeholder="Pregunta algo..."
+            placeholder="Escribe tu consulta aquí..."
+            disabled={isLoading}
           />
-          <button onClick={handleSend} disabled={isLoading}>Enviar</button>
+          <button onClick={handleSend} disabled={isLoading || !input.trim()}>Enviar</button>
         </footer>
       </div>
     </>
