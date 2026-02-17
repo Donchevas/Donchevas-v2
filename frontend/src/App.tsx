@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
+// URL de tu backend en Cloud Run validada anteriormente
 const API_URL = "https://donchevas-v2-1069673789450.europe-west1.run.app/chat";
 
 function App() {
@@ -39,9 +40,9 @@ function App() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', maxWidth: '900px', margin: '0 auto', background: '#f8fafc', fontFamily: 'Inter, system-ui, sans-serif' }}>
-      <header style={{ background: '#1e40af', color: 'white', padding: '1.5rem', textAlign: 'center', borderBottom: '4px solid #1e3a8a' }}>
+      <header style={{ background: '#1e40af', color: white, padding: '1.5rem', textAlign: 'center', borderBottom: '4px solid #1e3a8a' }}>
         <h1 style={{ margin: 0, fontSize: '1.5rem' }}>🤖 Donchevas-v2</h1>
-        <p style={{ margin: '5px 0 0', fontSize: '0.9rem', opacity: 0.9 }}>Manager de IA: Familia | CV | Formación</p>
+        <p style={{ margin: '5px 0 0', fontSize: '0.9rem', opacity: 0.9 }}>Manager Ejecutivo: Familia | CV | Formación</p>
       </header>
 
       <main style={{ flex: 1, overflowY: 'auto', padding: '20px', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
@@ -56,11 +57,11 @@ function App() {
             boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
             lineHeight: '1.6'
           }}>
-            {/* ReactMarkdown con remarkGfm para tablas y listas profesionales */}
+            {/* ReactMarkdown permite procesar listas, negritas y tablas del corpus */}
             <ReactMarkdown remarkPlugins={[remarkGfm]}>{m.text}</ReactMarkdown>
           </div>
         ))}
-        {isLoading && <div style={{ alignSelf: 'flex-start', color: '#64748b', fontStyle: 'italic' }}>Donchevas está analizando el contexto...</div>}
+        {isLoading && <div style={{ alignSelf: 'flex-start', color: '#64748b', fontStyle: 'italic' }}>Analizando contexto multidominio...</div>}
         <div ref={scrollRef} />
       </main>
 
@@ -70,7 +71,7 @@ function App() {
           value={input} 
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-          placeholder="Consulta sobre presupuestos, familia o cursos..."
+          placeholder="Consulta sobre presupuestos, familia o formación..."
           disabled={isLoading}
         />
         <button 
