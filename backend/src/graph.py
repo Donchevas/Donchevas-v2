@@ -9,11 +9,11 @@ def definir_grafo(llm, corpus_id):
     specialist = SpecialistAgent(llm, corpus_id)
 
     def nodo_clasificador(state):
-        # Recuperamos el dominio de la interacción anterior, por defecto PROFESIONAL
+        # Forzamos la recuperación del dominio previo del estado global
         dominio_previo = state.get("dominio", "PROFESIONAL")
         
         res = router.clasificar(state["consulta"], dominio_previo)
-        print(f"--- ROUTER: {dominio_previo} -> {res['dominio']} ---")
+        print(f"--- [LOG] Router decidió: {res['dominio']} (venía de {dominio_previo}) ---")
         
         return {
             "dominio": res["dominio"], 
@@ -21,8 +21,12 @@ def definir_grafo(llm, corpus_id):
         }
 
     def nodo_especialista(state):
+        # El especialista recibe la consulta y el dominio CONFIRMADO por el router
         respuesta = specialist.obtener_respuesta(state["consulta"], state["dominio"])
-        return {"respuesta": respuesta, "dominio": state["dominio"]}
+        return {
+            "respuesta": respuesta, 
+            "dominio": state["dominio"] # Importante: devolvemos el dominio para persistirlo
+        }
 
     workflow.add_node("clasificador", nodo_clasificador)
     workflow.add_node("especialista", nodo_especialista)
