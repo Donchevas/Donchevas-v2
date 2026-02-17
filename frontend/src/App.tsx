@@ -2,7 +2,6 @@ import React, { useState, useRef, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
-// URL validada de tu backend en Cloud Run
 const API_URL = "https://donchevas-v2-1069673789450.europe-west1.run.app/chat";
 
 function App() {
@@ -39,7 +38,7 @@ function App() {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', maxWidth: '900px', margin: '0 auto', background: '#f8fafc', fontFamily: 'Inter, system-ui, sans-serif' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', maxWidth: '900px', margin: '0 auto', background: '#f8fafc', fontFamily: 'system-ui, sans-serif' }}>
       <header style={{ background: '#1e40af', color: 'white', padding: '1.5rem', textAlign: 'center', borderBottom: '4px solid #1e3a8a' }}>
         <h1 style={{ margin: 0, fontSize: '1.5rem' }}>🤖 Donchevas-v2</h1>
         <p style={{ margin: '5px 0 0', opacity: 0.9 }}>Manager Ejecutivo: Familia | CV | Formación</p>
@@ -57,11 +56,10 @@ function App() {
             boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
             lineHeight: '1.6'
           }}>
-            {/* Renderizado de Markdown para un formato profesional de máster */}
             <ReactMarkdown remarkPlugins={[remarkGfm]}>{m.text}</ReactMarkdown>
           </div>
         ))}
-        {isLoading && <div style={{ alignSelf: 'flex-start', color: '#64748b', fontStyle: 'italic' }}>Analizando contexto y corpus...</div>}
+        {isLoading && <div style={{ alignSelf: 'flex-start', color: '#64748b', fontStyle: 'italic' }}>Analizando contexto...</div>}
         <div ref={scrollRef} />
       </main>
 
@@ -71,17 +69,13 @@ function App() {
           value={input} 
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-          placeholder="Consulta sobre presupuestos, familia o formación..."
+          placeholder="Escribe aquí..."
           disabled={isLoading}
         />
-        <button 
-          onClick={handleSend} 
-          disabled={isLoading || !input.trim()}
-          style={{ padding: '0.75rem 1.5rem', background: '#2563eb', color: 'white', border: 'none', borderRadius: '9999px', cursor: 'pointer', fontWeight: '600' }}
-        >
-          Enviar
-        </button>
+        <button onClick={handleSend} disabled={isLoading} style={{ padding: '0.75rem 1.5rem', background: '#2563eb', color: 'white', border: 'none', borderRadius: '9999px', cursor: 'pointer' }}>Enviar</button>
       </footer>
     </div>
   );
 }
+
+export default App;
