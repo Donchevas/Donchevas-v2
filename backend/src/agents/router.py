@@ -5,15 +5,16 @@ class RouterAgent:
     def __init__(self, llm):
         self.llm = llm
         self.template = PromptTemplate.from_template("""
-            Eres el Orquestador de Donchevas-v2. Tu misión es clasificar la consulta.
+            Eres el Orquestador de Donchevas-v2. Tu misión es clasificar la consulta actual.
             
-            REGLA DE ORO: Si la consulta es ambigua (ej: "y el menor", "quién más", "cuánto"), 
-            MANTÉN el dominio anterior.
+            REGLA DE ORO DE CONTEXTO: 
+            Si la consulta es corta o ambigua (ej: "y el menor", "quién más", "cuánto costó", "dónde trabaja"), 
+            MANTÉN el dominio anterior. Solo cambia si el usuario introduce un tema claramente distinto.
 
             DOMINIOS DISPONIBLES:
-            - "FAMILIA": Datos de Tatiana, Sebastian, Leandro o Pablo.
-            - "PROFESIONAL": Experiencia en Ayesa, proyectos y presupuestos ($).
-            - "ACADEMICO": Cursos de IA, GCP, Azure y el Máster.
+            - "FAMILIA": Datos de Tatiana, Sebastian, Leandro o Pablo Molina.
+            - "PROFESIONAL": Experiencia en Ayesa, proyectos, presupuestos e inversión.
+            - "ACADEMICO": Cursos de IA, certificaciones de GCP/Azure y el Máster.
 
             DOMINIO ANTERIOR: {dominio_previo}
             CONSULTA ACTUAL: {consulta}

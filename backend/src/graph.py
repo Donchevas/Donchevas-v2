@@ -3,18 +3,17 @@ from src.agents.router import RouterAgent
 from src.agents.specialist import SpecialistAgent
 
 def definir_grafo(llm, corpus_id):
-    # El estado ahora persiste el 'dominio'
     workflow = StateGraph(dict)
     
     router = RouterAgent(llm)
     specialist = SpecialistAgent(llm, corpus_id)
 
     def nodo_clasificador(state):
-        # Recuperamos el dominio de la interacción anterior
-        dominio_previo = state.get("dominio", "GENERAL")
+        # Recuperamos el dominio de la interacción anterior, por defecto PROFESIONAL
+        dominio_previo = state.get("dominio", "PROFESIONAL")
         
-        print(f"--- CLASIFICANDO. PREVIO: {dominio_previo} ---")
         res = router.clasificar(state["consulta"], dominio_previo)
+        print(f"--- ROUTER: {dominio_previo} -> {res['dominio']} ---")
         
         return {
             "dominio": res["dominio"], 
@@ -22,9 +21,7 @@ def definir_grafo(llm, corpus_id):
         }
 
     def nodo_especialista(state):
-        print(f"--- EJECUTANDO ESPECIALISTA: {state['dominio']} ---")
         respuesta = specialist.obtener_respuesta(state["consulta"], state["dominio"])
-        # Retornamos la respuesta y MANTENEMOS el dominio en el estado
         return {"respuesta": respuesta, "dominio": state["dominio"]}
 
     workflow.add_node("clasificador", nodo_clasificador)
